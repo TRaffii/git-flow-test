@@ -11,14 +11,6 @@ jobs:
         startsWith(github.event.pull_request.head.ref, 'hotfix/') && 
         github.event.pull_request.base.ref == 'acceptance'
       steps:
-        - name: Generate token
-          id: generate_token
-          uses: tibdex/github-app-token@v1
-          with:
-            app_id: ${{ secrets.APP_ID }}
-            private_key: ${{ secrets.APP_PRIVATE_KEY }}
-            # Optional (defaults to the current repository).
-            # repository: owner/repo
         - name: Merge or PR
           uses: siematypie/merge-or-pr@v1.0
           id: merge-or-pr
@@ -30,7 +22,7 @@ jobs:
             pr_maintainer_modification: true
             pr_draft: true
             pr_asignee: ${{ github.event.pull_request.user.login }}
-            repo_token: ${{steps.generate_token.outputs.token }} 
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
         - name: print-output
           run: echo "PR created ${{ steps.merge-or-pr.outputs.PR_CREATED  }} ${{ steps.merge-or-pr.outputs.PR_NUMBER }} ${{ steps.merge-or-pr.outputs.PR_URL }}"
         - uses: mshick/add-pr-comment@v1
